@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>కళ్యాణ ఆహ్వానము - AV STUDIO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;800&family=Ramabhadra&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-red: #d31a1a; --primary-blue: #004ba0; --primary-green: #1a7a1a; --pink-text: #d61c5c; --bg-color: #fdfbf7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Anek Telugu', sans-serif; background-color: #e0e0e0; overflow-x: hidden; min-height: 100vh; }
+        
+        #cardView, #errorScreen { display: none; justify-content: center; padding: 20px; width: 100%; }
+        
+        #loadingView { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100%; background-color: #e0e0e0; position: fixed; top: 0; left: 0; z-index: 999999; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #fdfbf7; border-top: 5px solid var(--primary-red); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-family: 'Anek Telugu', sans-serif; color: var(--primary-blue); font-size: 18px; font-weight: 600; }
+        
+        .ganesha-img { font-size: 50px; color: #FF9933; display: inline-block; }
+        .card-container { background-color: var(--bg-color); width: 100%; max-width: 600px; padding: 40px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; background-image: radial-gradient(circle at center, #ffffff 0%, #f4f1ea 100%); text-align: center; z-index: 10; margin-top: 20px; }
+        .fade-in { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease-out forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.3s; } .delay-3 { animation-delay: 0.5s; } .delay-4 { animation-delay: 0.7s; }
+        .float { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        .petal { position: fixed; top: -10px; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .header { margin-bottom: 20px; }
+        .title-family { font-family: 'Ramabhadra', sans-serif; color: var(--primary-red); font-size: 28px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; margin-bottom: 5px; }
+        .title-main { font-size: 32px; color: var(--primary-green); font-weight: 800; margin-bottom: 30px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+        .couples-section { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
+        .person { display: flex; flex-direction: column; align-items: center; }
+        .photo-frame { width: 150px; height: 180px; border-radius: 50% 50% 10% 10%; border: 3px solid #e2c073; padding: 5px; background: #fff; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); margin-bottom: 15px; overflow: hidden; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50% 50% 10% 10%; transition: transform 0.3s; }
+        .photo-frame img:hover { transform: scale(1.1); }
+        .name-role { font-family: 'Ramabhadra', sans-serif; color: var(--primary-blue); font-size: 18px; margin-bottom: -5px; }
+        .name-main { font-family: 'Ramabhadra', sans-serif; color: var(--primary-red); font-size: 24px; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 2px 2px 3px rgba(0, 0, 0, 0.4); }
+        .details-section { margin: 20px 0; line-height: 1.8; }
+        .green-label { color: var(--primary-green); font-weight: 800; font-size: 20px; margin-top: 15px; }
+        .blue-info { color: var(--primary-blue); font-weight: 600; font-size: 18px; }
+        .inviter-name { font-family: 'Ramabhadra', sans-serif; color: var(--pink-text); font-size: 26px; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 2px 2px 3px rgba(0, 0, 0, 0.3); margin: 10px 0; }
+        .action-buttons { display: flex; justify-content: center; gap: 15px; margin: 25px 0; flex-wrap: wrap; }
+        .btn { width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; text-decoration: none; color: white; border: none; cursor: pointer; margin: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.2s; font-size: 20px; }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); }
+        .btn-youtube { background: linear-gradient(45deg, #ff0000, #cc0000); }
+        .btn-map { background: linear-gradient(45deg, #4285F4, #0f52ba); }
+        .btn-whatsapp { background: linear-gradient(45deg, #25D366, #128C7E); }
+        .btn-calendar { background: linear-gradient(45deg, #f39c12, #d35400); }
+        .divider { border: none; border-top: 2px dotted #a86c82; margin: 20px auto; width: 80%; }
+        .greetings { color: var(--primary-green); font-weight: 800; font-size: 18px; margin-bottom: 15px; }
+        .family-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 14px; margin-bottom: 20px; }
+        .family-grid-bottom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; font-size: 14px; }
+        .relation { color: var(--primary-green); font-weight: 600; margin-bottom: 3px; }
+        .rel-name-blue { color: var(--primary-blue); font-weight: 600; }
+        @media (max-width: 500px) { .family-grid, .family-grid-bottom { grid-template-columns: 1fr; } .photo-frame { width: 120px; height: 150px; } }
+        .hidden { display: none !important; }
+        .error-screen { text-align: center; margin-top: 100px; font-family: sans-serif; }
+        .error-screen h2 { color: #d31a1a; }
+        .countdown-box { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+        .time-unit { background: white; border: 2px solid #e2c073; padding: 8px; border-radius: 8px; min-width: 65px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .time-unit span { display: block; font-size: 22px; font-weight: bold; color: var(--primary-red); }
+        .time-unit label { font-size: 12px; color: var(--primary-blue); font-weight: bold; }
+        .wishes-container { margin-top: 30px; background: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 15px; border: 1px dashed #a86c82; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        .wishes-container h3 { color: var(--primary-red); font-family: 'Ramabhadra', sans-serif; margin-bottom: 15px; font-size: 20px; }
+        .wish-input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        .wish-input-group input, .wish-input-group textarea { padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit; font-size: 14px; }
+        .btn-wish { background: linear-gradient(45deg, #1a7a1a, #2ecc71); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        .wishes-list { max-height: 250px; overflow-y: auto; text-align: left; padding: 10px; background: white; border-radius: 8px; border: 1px solid #eee; }
+        .wish-item { border-bottom: 1px solid #f0f0f0; padding: 10px 0; }
+        .wish-item:last-child { border-bottom: none; }
+        .wish-name { font-weight: bold; color: var(--primary-blue); font-size: 14px; }
+        .wish-text { color: #444; font-size: 14px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div id="loadingView">
+        <div class="spinner"></div>
+        <p class="loading-text">పత్రిక సిద్ధమవుతోంది... 🌸</p>
+    </div>
+
+    <div id="cardView">
+        <div class="card-container" id="mainCard">
+            <header class="header fade-in delay-1" id="boxTitleFamily">
+                <i class="fa-solid fa-om ganesha-img float"></i>
+                <h1 class="title-family" id="displayTitleFamily"></h1>
+                <h2 class="title-main">కళ్యాణ ఆహ్వానము</h2>
+            </header>
+
+            <section class="couples-section fade-in delay-2">
+                <div class="person" id="boxGroom">
+                    <div class="photo-frame float"><img src="" id="displayGroomPhoto" alt="Groom"></div>
+                    <p class="name-role">వరుడు చి||</p>
+                    <p class="name-main" id="displayGroom"></p>
+                </div>
+                <div class="person" id="boxBride">
+                    <div class="photo-frame float" style="animation-delay: 1.5s;"><img src="" id="displayBridePhoto" alt="Bride"></div>
+                    <p class="name-role">వధువు చి|| ల||సౌ||</p>
+                    <p class="name-main" id="displayBride"></p>
+                </div>
+            </section>
+
+            <section class="details-section fade-in delay-3">
+                <div id="boxCountdown" class="hidden">
+                    <p class="green-label">ముహూర్త సమయానికి</p>
+                    <div class="countdown-box" id="timerDisplay"></div>
+                </div>
+                <div id="boxTime">
+                    <p class="green-label">సుముహూర్తము</p>
+                    <p class="blue-info" id="displayTime"></p>
+                </div>
+                <div id="boxVenue">
+                    <p class="green-label">వేదిక</p>
+                    <p class="blue-info" id="displayVenue"></p>
+                </div>
+                <div class="action-buttons">
+                    <button onclick="shareOnWhatsApp()" class="btn btn-whatsapp" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                    <button onclick="addToCalendar()" class="btn btn-calendar hidden" id="displayCalendar" title="క్యాలెండర్‌లో సేవ్ చేయండి"><i class="fa-solid fa-calendar-check"></i></button>
+                    <a href="#" id="displayYoutube" target="_blank" class="btn btn-youtube hidden" title="లైవ్ చూడండి"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" id="displayMap" target="_blank" class="btn btn-map hidden" title="వేదిక దారి (Map)"><i class="fa-solid fa-location-dot"></i></a>
+                </div>
+                <div id="boxInviter">
+                    <p class="green-label">ఆహ్వానించువారు</p>
+                    <p class="inviter-name" id="displayInviterName"></p>
+                </div>
+            </section>
+
+            <hr class="divider fade-in delay-4" id="dividerLine">
+
+            <section class="family-details fade-in delay-4" id="boxFamilySection">
+                <p class="greetings" id="displayGreetings"></p>
+                <div class="family-grid">
+                    <div id="boxFam1"><p class="relation">తాతయ్య - అమ్మమ్మ</p><p class="rel-name-blue" id="displayFName1"></p><p class="rel-name-blue" id="displayFName2"></p></div>
+                    <div id="boxFam2"><p class="relation">మేనమామ - అత్తయ్య</p><p class="rel-name-blue" id="displayFName3"></p><p class="rel-name-blue" id="displayFName4"></p></div>
+                    <div id="boxFam3"><p class="relation">పెదనాన్న - పెద్దమ్మ</p><p class="rel-name-blue" id="displayFName5"></p><p class="rel-name-blue" id="displayFName6"></p></div>
+                </div>
+                <div class="family-grid-bottom">
+                    <div id="boxFam4"><p class="relation">చెల్లెలు</p><p class="rel-name-blue" id="displayFName7"></p></div>
+                </div>
+            </section>
+
+            <section class="wishes-container fade-in delay-4" id="wishesSection">
+                <h3>శుభాకాంక్షలు (Guest Book)</h3>
+                <div class="wish-input-group">
+                    <input type="text" id="guestName" placeholder="మీ పేరు">
+                    <textarea id="guestMessage" rows="2" placeholder="వధూవరులకు మీ ఆశీస్సులు / శుభాకాంక్షలు..."></textarea>
+                    <button class="btn-wish" onclick="submitWish()">పంపండి</button>
+                </div>
+                <div class="wishes-list" id="wishesDisplayArea"></div>
+            </section>
+        </div>
+    </div>
+
+    <div id="errorScreen" class="error-screen" style="display: none;">
+        <h2>⚠️ క్షమించాలి!</h2>
+        <p>మీరు సరైన లింక్ ఓపెన్ చేయలేదని లేదా ఈ పత్రిక అందుబాటులో లేదని గమనించాము.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAa0TMYw90aXznIkC_8ShBR1Tl0oMk9344",
+            authDomain: "wedding-invitation-a3c47.firebaseapp.com",
+            projectId: "wedding-invitation-a3c47",
+            storageBucket: "wedding-invitation-a3c47.firebasestorage.app",
+            messagingSenderId: "552334912301",
+            appId: "1:552334912301:web:5bc2b91803e01cf65581a4",
+            measurementId: "G-5CFNFRDFFB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentClientId = urlParams.get('id');
+        let globalData = {};
+        
+        let animationInterval;
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.innerHTML = '🌸'; petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 3 + 3 + 's';
+            petal.style.fontSize = Math.random() * 10 + 15 + 'px';
+            document.body.appendChild(petal);
+            setTimeout(() => { if (petal.parentNode) petal.remove() }, 6000);
+        }
+        function startAnimation() { if (!animationInterval) animationInterval = setInterval(createPetal, 400); }
+
+        function showError() {
+            document.getElementById('loadingView').style.display = 'none';
+            document.getElementById('cardView').style.display = 'none';
+            document.getElementById('errorScreen').style.display = 'block';
+        }
+
+        if (!currentClientId) {
+            showError();
+        } else {
+            const clientRef = ref(db, 'avstudio_wedding_cards/' + currentClientId);
+            
+            // మార్పు: ఎర్రర్ వస్తే క్యాచ్ చేయడానికి లాజిక్
+            onValue(clientRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    globalData = snapshot.val();
+                    document.getElementById('loadingView').style.display = 'none';
+                    document.getElementById('cardView').style.display = 'flex';
+                    updateCardDOM(globalData);
+                    startAnimation();
+
+                    // View Analytics 
+                    if (!sessionStorage.getItem('viewLogged_' + currentClientId)) {
+                        sessionStorage.setItem('viewLogged_' + currentClientId, 'true');
+                        const vRef = ref(db, 'avstudio_wedding_cards/' + currentClientId + '/views');
+                        get(vRef).then(s => set(vRef, (s.val() || 0) + 1)).catch(e => console.log("View count error", e));
+                    }
+                } else {
+                    showError();
+                }
+            }, (error) => {
+                console.error("Firebase Error:", error);
+                alert("డేటాబేస్ నుండి డేటా తీసుకురావడంలో ఎర్రర్: " + error.message);
+                showError();
+            });
+        }
+
+        window.shareOnWhatsApp = function () {
+            if (globalData && globalData.adminGroom && currentClientId) {
+                const shareText = `🌸 *${globalData.adminTitleFamily || 'మా'} ఇంట కళ్యాణ మహోత్సవం* 🌸\n\nచి|| *${globalData.adminGroom}* & చి||ల||సౌ|| *${globalData.adminBride}* ల వివాహ మహోత్సవానికి మిమ్మల్ని సాదరంగా ఆహ్వానిస్తున్నాము.\n\n*ముహూర్తం:* ${globalData.adminTime || 'పత్రిక చూడండి'}\n*వేదిక:* ${globalData.adminVenue || 'పత్రిక చూడండి'}\n\nమా డిజిటల్ పత్రికను కింది లింక్ ద్వారా చూడగలరు:\n${window.location.href}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        };
+
+        window.addToCalendar = function () {
+            if (!globalData.adminTimerDate) return;
+            const date = new Date(globalData.adminTimerDate);
+            const endDate = new Date(date.getTime() + 2 * 60 * 60 * 1000);
+            const formatDate = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, "");
+            const title = encodeURIComponent(`${globalData.adminGroom} & ${globalData.adminBride} కళ్యాణ మహోత్సవం`);
+            const details = encodeURIComponent(`సాదర ఆహ్వానం!\nముహూర్తం: ${globalData.adminTime}\nవేదిక: ${globalData.adminVenue}`);
+            const location = encodeURIComponent(globalData.adminMap || globalData.adminVenue || '');
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formatDate(date)}/${formatDate(endDate)}&details=${details}&location=${location}`;
+            window.open(url, '_blank');
+        };
+
+        window.submitWish = function () {
+            const name = document.getElementById('guestName').value.trim();
+            const msg = document.getElementById('guestMessage').value.trim();
+            if (!name || !msg) { alert("దయచేసి పేరు మరియు శుభాకాంక్షలు రాయండి!"); return; }
+            const wishesRef = ref(db, 'avstudio_wedding_cards/' + currentClientId + '/wishes');
+            push(wishesRef, { name: name, message: msg, timestamp: new Date().toISOString() }).then(() => {
+                document.getElementById('guestName').value = '';
+                document.getElementById('guestMessage').value = '';
+                alert("మీ శుభాకాంక్షలు పంపబడ్డాయి! ధన్యవాదాలు 🌸");
+            }).catch(e => {
+                alert("ఎర్రర్: " + e.message);
+            });
+        };
+
+        let countdownTimerId;
+        function updateCountdown() {
+            if (!globalData.adminTimerDate) {
+                if (document.getElementById('boxCountdown')) document.getElementById('boxCountdown').classList.add('hidden');
+                if (document.getElementById('displayCalendar')) document.getElementById('displayCalendar').classList.add('hidden');
+                return;
+            }
+            const distance = new Date(globalData.adminTimerDate).getTime() - new Date().getTime();
+            if (distance < 0) {
+                document.getElementById('timerDisplay').innerHTML = "<p style='color:var(--primary-green); font-weight:bold; font-size:18px;'>ముహూర్త సమయం పూర్తయింది! 🌸</p>";
+                document.getElementById('boxCountdown').classList.remove('hidden');
+                return;
+            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById('timerDisplay').innerHTML = `<div class="time-unit"><span>${days}</span><label>రోజులు</label></div><div class="time-unit"><span>${hours}</span><label>గంటలు</label></div><div class="time-unit"><span>${minutes}</span><label>నిమిషాలు</label></div><div class="time-unit"><span>${seconds}</span><label>సెకన్లు</label></div>`;
+            document.getElementById('boxCountdown').classList.remove('hidden');
+            document.getElementById('displayCalendar').classList.remove('hidden');
+        }
+
+        function updateCardDOM(data) {
+            // మార్పు: డేటాలో తప్పులున్నా క్రాష్ అవ్వకుండా స్ట్రాంగ్ గా చేసాను
+            const updateEl = (val, id, boxId = null) => {
+                const el = document.getElementById(id); if (!el) return;
+                const box = boxId ? document.getElementById(boxId) : el;
+                if (val !== undefined && val !== null && String(val).trim() !== "") {
+                    if (el.tagName === 'IMG') el.src = val;
+                    else if (el.tagName === 'A') { el.href = val; el.classList.remove('hidden'); }
+                    else el.innerText = val;
+                    box.classList.remove('hidden');
+                } else { box.classList.add('hidden'); }
+            };
+
+            try {
+                updateEl(data.adminTitleFamily, 'displayTitleFamily', 'boxTitleFamily');
+                updateEl(data.adminGroom, 'displayGroom', 'boxGroom');
+                updateEl(data.adminBride, 'displayBride', 'boxBride');
+                updateEl(data.adminTime, 'displayTime', 'boxTime');
+                updateEl(data.adminVenue, 'displayVenue', 'boxVenue');
+                updateEl(data.adminInviterName, 'displayInviterName', 'boxInviter');
+                updateEl(data.adminGreetings, 'displayGreetings');
+                updateEl(data.adminYoutube, 'displayYoutube');
+                updateEl(data.adminMap, 'displayMap');
+
+                if (data.groomPhoto) { document.getElementById('displayGroomPhoto').src = data.groomPhoto; document.getElementById('displayGroomPhoto').parentElement.style.display = 'block'; }
+                else { if (document.getElementById('displayGroomPhoto')) document.getElementById('displayGroomPhoto').parentElement.style.display = 'none'; }
+                if (data.bridePhoto) { document.getElementById('displayBridePhoto').src = data.bridePhoto; document.getElementById('displayBridePhoto').parentElement.style.display = 'block'; }
+                else { if (document.getElementById('displayBridePhoto')) document.getElementById('displayBridePhoto').parentElement.style.display = 'none'; }
+
+                let famCount = 0;
+                if (data.fName1 || data.fName2) { updateEl(data.fName1, 'displayFName1'); updateEl(data.fName2, 'displayFName2'); famCount++; } else if (document.getElementById('boxFam1')) document.getElementById('boxFam1').classList.add('hidden');
+                if (data.fName3 || data.fName4) { updateEl(data.fName3, 'displayFName3'); updateEl(data.fName4, 'displayFName4'); famCount++; } else if (document.getElementById('boxFam2')) document.getElementById('boxFam2').classList.add('hidden');
+                if (data.fName5 || data.fName6) { updateEl(data.fName5, 'displayFName5'); updateEl(data.fName6, 'displayFName6'); famCount++; } else if (document.getElementById('boxFam3')) document.getElementById('boxFam3').classList.add('hidden');
+                if (data.fName7) { updateEl(data.fName7, 'displayFName7'); famCount++; } else if (document.getElementById('boxFam4')) document.getElementById('boxFam4').classList.add('hidden');
+
+                if (famCount === 0 && !data.adminGreetings) {
+                    if (document.getElementById('boxFamilySection')) document.getElementById('boxFamilySection').classList.add('hidden');
+                    if (document.getElementById('dividerLine')) document.getElementById('dividerLine').classList.add('hidden');
+                } else {
+                    if (document.getElementById('boxFamilySection')) document.getElementById('boxFamilySection').classList.remove('hidden');
+                    if (document.getElementById('dividerLine')) document.getElementById('dividerLine').classList.remove('hidden');
+                }
+
+                const wishesArea = document.getElementById('wishesDisplayArea');
+                if (data.wishes) {
+                    wishesArea.innerHTML = '';
+                    Object.values(data.wishes).reverse().forEach(wish => {
+                        wishesArea.innerHTML += `<div class="wish-item"><div class="wish-name">👤 ${wish.name}</div><div class="wish-text">${wish.message}</div></div>`;
+                    });
+                } else { wishesArea.innerHTML = '<p style="text-align:center; color:#888;">ఇంకా ఎవరూ శుభాకాంక్షలు చెప్పలేదు. మీరే ముందుగా చెప్పండి! 😊</p>'; }
+
+                if (countdownTimerId) clearInterval(countdownTimerId);
+                countdownTimerId = setInterval(updateCountdown, 1000);
+                updateCountdown();
+            } catch (err) {
+                console.error("DOM Update Error:", err);
+            }
+        }
+    </script>
+</body>
+</html>
